@@ -1,0 +1,48 @@
+[2025-09-27 14:30:00] INFO: User authentication successful - username: admin, IP: 192.168.1.101
+[2025-09-27 14:30:15] WARNING: Multiple failed login attempts detected - IP: 203.0.113.42, attempts: 3
+[2025-09-27 14:30:30] ERROR: SQL injection attempt blocked - IP: 198.51.100.15, payload: "' OR '1'='1"
+[2025-09-27 14:30:45] INFO: File upload completed - user: johndoe, file: report.pdf, size: 2.5MB
+[2025-09-27 14:31:00] CRITICAL: Privilege escalation attempt - user: guest, target: administrator
+[2025-09-27 14:31:15] WARNING: Suspicious file access - user: temp_user, file: /etc/shadow
+[2025-09-27 14:31:30] INFO: API rate limit applied - IP: 45.142.166.12, endpoint: /api/data
+[2025-09-27 14:31:45] ERROR: XSS attack detected and blocked - IP: 91.240.118.172, script: <script>alert('xss')</script>
+[2025-09-27 14:32:00] WARNING: Directory traversal attempt - IP: 198.51.100.25, path: ../../../../etc/passwd
+[2025-09-27 14:32:15] INFO: Password changed successfully - user: alice, IP: 192.168.1.105
+[2025-09-27 14:32:30] CRITICAL: Malware detected in upload - filename: payload.exe, hash: a1b2c3d4e5f6
+[2025-09-27 14:32:45] ERROR: Brute force attack in progress - IP: 185.220.101.18, service: SSH, attempts: 25
+[2025-09-27 14:33:00] WARNING: Unusual network traffic pattern - source: 203.0.113.0/24, volume: 500MB/min
+[2025-09-27 14:33:15] INFO: System backup completed successfully - size: 15.2GB, duration: 45min
+[2025-09-27 14:33:30] ERROR: Command injection attempt - IP: 45.142.166.25, command: "rm -rf /"
+[2025-09-27 14:33:45] WARNING: Session hijacking attempt detected - user: bob, IP: 198.51.100.35
+[2025-09-27 14:34:00] CRITICAL: Data exfiltration detected - user: contractor, data: customer_db.sql, size: 50MB
+[2025-09-27 14:34:15] INFO: Firewall rule updated - rule: BLOCK_TOR_NODES, status: active
+[2025-09-27 14:34:30] ERROR: Port scan detected - source: 91.240.118.172, ports: 1-65535, type: SYN
+[2025-09-27 14:34:45] WARNING: Suspicious PowerShell execution - user: intern, command: Invoke-WebRequest
+[2025-09-27 14:35:00] INFO: Certificate renewal completed - domain: secure.company.com, expires: 2026-09-27
+[2025-09-27 14:35:15] CRITICAL: Ransomware behavior detected - process: encrypt.exe, encrypted_files: 156
+[2025-09-27 14:35:30] ERROR: DNS tunneling attempt - domain: a1b2c3.malicious-domain.com, queries: 500
+[2025-09-27 14:35:45] WARNING: Unauthorized API access - key: REVOKED_KEY_123, endpoint: /admin/users
+[2025-09-27 14:36:00] INFO: User account locked due to suspicious activity - user: testaccount, reason: geo_anomaly
+[2025-09-27 14:36:15] ERROR: Buffer overflow attempt - service: web_server, payload_size: 4096
+[2025-09-27 14:36:30] CRITICAL: Lateral movement detected - source: workstation-15, target: domain-controller
+[2025-09-27 14:36:45] WARNING: Suspicious registry modification - key: HKLM\Software\Microsoft\Windows\Run
+[2025-09-27 14:37:00] INFO: VPN connection established - user: remote_worker, location: London, UK
+[2025-09-27 14:37:15] ERROR: Cryptojacking attempt detected - process: miner.exe, CPU_usage: 95%
+[2025-09-27 14:37:30] WARNING: Phishing email blocked - recipient: hr@company.com, sender: fake-bank@evil.com
+[2025-09-27 14:37:45] CRITICAL: Zero-day exploit attempt - vulnerability: CVE-2025-12345, target: web_app
+[2025-09-27 14:38:00] INFO: Intrusion detection system updated - signatures: 15420, last_update: 2025-09-27
+[2025-09-27 14:38:15] ERROR: DDoS attack detected - target: main_website, requests/sec: 10000, source_ips: 500
+[2025-09-27 14:38:30] WARNING: Suspicious outbound connection - destination: tor-exit-node.onion, port: 9050
+[2025-09-27 14:38:45] INFO: Security patch applied - system: mail_server, patch: MS25-001, reboot_required: yes
+[2025-09-27 14:39:00] CRITICAL: Data breach attempt - table: user_credentials, records_accessed: 10000
+[2025-09-27 14:39:15] ERROR: Web shell detected - file: /var/www/html/upload/shell.php, permissions: 755
+[2025-09-27 14:39:30] WARNING: Unusual login time - user: nightshift_admin, time: 02:30, location: China
+[2025-09-27 14:39:45] INFO: Multi-factor authentication enabled - user: security_team, method: TOTP
+[2025-09-27 14:40:00] ERROR: Keylogger activity detected - process: winlogon.exe, keystrokes_captured: 1500
+[2025-09-27 14:40:15] CRITICAL: Insider threat alert - user: disgruntled_employee, action: mass_file_download
+[2025-09-27 14:40:30] WARNING: Suspicious DNS query - domain: command-control-server.evil, type: TXT
+[2025-09-27 14:40:45] INFO: Endpoint protection updated - agent_version: 5.2.1, definition_version: 20250927.1
+[2025-09-27 14:41:00] ERROR: Living-off-the-land attack - tool: powershell.exe, technique: T1059.001
+[2025-09-27 14:41:15] WARNING: Credential stuffing attack - service: customer_portal, tested_credentials: 50000
+[2025-09-27 14:41:30] CRITICAL: Advanced persistent threat detected - group: APT29, IOCs: 25, duration: 30_days
+[2025-09-27 14:41:45] INFO: Incident response team notified - incident_id: INC-2025-0927-001, severity: HIGH
