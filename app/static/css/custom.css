@@ -1,0 +1,346 @@
+/* Additional styles for Avighna2 SIEM Web Interface */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+
+/* File upload drag & drop styles */
+.file-drop-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 25px;
+    border: 2px dashed #d1ecf1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-drop-area:hover {
+    border-color: var(--secondary-color);
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
+.file-drop-area.dragover {
+    border-color: var(--success-color);
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--success-color);
+}
+
+/* Loading animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge-success {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(39, 174, 96, 0.2);
+}
+
+.status-badge-warning {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+.status-badge-danger {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+/* Code blocks and pre formatting */
+pre {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #212529 !important;
+}
+
+code {
+    background-color: #e9ecef;
+    color: #d63384;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.875em;
+}
+
+/* Table styling */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-color: rgba(52, 152, 219, 0.2);
+    font-weight: 600;
+}
+
+/* Progress bars */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, var(--secondary-color), #5dade2);
+    border-radius: 4px;
+}
+
+/* Notification badges */
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--danger-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Enhanced form controls */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: var(--secondary-color);
+}
+
+/* Ensure good contrast for all text */
+.card-title, .card-text, .form-label, .modal-title {
+    color: #212529 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.alert {
+    color: #212529;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 576px) {
+    .feature-icon {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        font-size: 0.875rem;
+        padding: 8px 16px;
+    }
+    
+    .modal-dialog {
+        margin: 10px;
+    }
+}
+
+/* Ensure all text is visible */
+body, .card-body, .modal-body, .navbar-text {
+    color: #212529 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #212529 !important;
+}
+
+.feature-icon {
+    color: var(--secondary-color) !important;
+}
+
+.list-group-item {
+    background-color: white;
+    color: #212529;
+    border-color: #dee2e6;
+}
+
+.table {
+    color: #212529;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.btn-outline-primary {
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .btn,
+    .modal,
+    footer {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #dee2e6 !important;
+        box-shadow: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+/* Enhanced Download Button Styles */
+.download-btn {
+    background: linear-gradient(45deg, #28a745, #20c997) !important;
+    border: none !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3) !important;
+}
+
+.download-btn:hover {
+    background: linear-gradient(45deg, #218838, #1da589) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4) !important;
+}
+
+.download-btn:active {
+    transform: translateY(0) !important;
+}
+
+/* Report Results Enhancement */
+.report-details p {
+    margin-bottom: 0.5rem !important;
+}
+
+.report-details code {
+    background: rgba(108, 117, 125, 0.1) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.875em !important;
+}
+
+/* NLP Query Enhancement */
+.nlp-response {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+    white-space: pre-line;
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.nlp-response h6 {
+    color: #007bff;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Pulse animation for real-time elements */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Avighna2 SIEM{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h2 class="card-title fw-bold">Secure Access</h2>
+                    <p class="text-muted">Enter your credentials to access Avighna2 SIEM</p>
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Login
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Secured with progressive access control
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3 text-dark">Security Features</h6>
+                    <div class="row">
+                        <div class="col-4">
+                            <i class="fas fa-user-shield fa-2x mb-2 text-primary"></i>
+                            <small class="d-block text-dark">Access Control</small>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-eye fa-2x mb-2 text-primary"></i>
+                            <small class="d-block text-dark">Activity Logging</small>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-lock fa-2x mb-2 text-primary"></i>
+                            <small class="d-block text-dark">Auto Lockout</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-focus on password field
+$(document).ready(function() {
+    $('#password').focus();
+});
+
+// Handle form submission
+$('form').on('submit', function(e) {
+    const submitBtn = $(this).find('button[type="submit"]');
+    submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Authenticating...');
+});
+</script>
+{% endblock %}

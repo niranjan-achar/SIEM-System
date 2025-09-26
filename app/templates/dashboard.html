@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Avighna2 SIEM{% endblock %}
+
+{% block content %}
+{% if not session.authenticated %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h2 class="card-title fw-bold mb-3">Welcome to Avighna2 SIEM</h2>
+                    <p class="lead text-muted mb-4">Conversational Security Information and Event Management System</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Login to Continue
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- Dashboard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="card-title mb-2">
+                                <i class="fas fa-shield-alt me-3 text-primary"></i>
+                                Avighna2 Dashboard
+                            </h1>
+                            <p class="text-muted mb-0">Conversational Security Information and Event Management System</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <span class="status-indicator status-success"></span>
+                                <span class="fw-semibold">System Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-upload feature-icon"></i>
+                    <h5 class="card-title">Log Ingestion</h5>
+                    <p class="card-text">Upload and parse log files</p>
+                    <button class="btn btn-primary" onclick="showIngestModal()">
+                        <i class="fas fa-cloud-upload-alt me-2"></i>Ingest Logs
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-search feature-icon"></i>
+                    <h5 class="card-title">File Scanner</h5>
+                    <p class="card-text">Scan files with YARA rules</p>
+                    <button class="btn btn-warning" onclick="showScanModal()">
+                        <i class="fas fa-bug me-2"></i>Scan File
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-globe feature-icon"></i>
+                    <h5 class="card-title">GeoIP Lookup</h5>
+                    <p class="card-text">Analyze IP geolocation</p>
+                    <button class="btn btn-success" onclick="showGeoIPModal()">
+                        <i class="fas fa-map-marker-alt me-2"></i>Lookup IP
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-pdf feature-icon"></i>
+                    <h5 class="card-title">Generate Report</h5>
+                    <p class="card-text">Create forensic reports</p>
+                    <button class="btn btn-danger" onclick="generateReport()">
+                        <i class="fas fa-file-export me-2"></i>Generate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NLP Query Interface -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments me-2"></i>
+                        Natural Language Query Interface
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="nlpQuery" placeholder="Ask me anything... (e.g., 'show top 5 failed logins')">
+                        <button class="btn btn-primary" type="button" onclick="processNLPQuery()">
+                            <i class="fas fa-paper-plane me-2"></i>Ask
+                        </button>
+                    </div>
+                    <div id="nlpResponse" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-robot me-3 mt-1"></i>
+                                <div id="nlpResponseText"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and Results -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Recent Activity
+                    </h5>
+                    <button class="btn btn-sm btn-outline-primary float-end" onclick="loadActivity()">
+                        <i class="fas fa-refresh me-1"></i>Refresh
+                    </button>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    <div id="activityLog">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                            <p>Loading activity...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Analysis Results
+                    </h5>
+                </div>
+                <div class="card-body" id="resultsPanel">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-chart-bar fa-2x mb-3"></i>
+                        <p>Results will appear here after analysis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Modals -->
+{% include 'modals.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+
+{% block title %}ELK Dashboard - Avighna2 SIEM{% endblock %}
+
+{% block content %}
+{% if not session.authenticated %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h2 class="card-title fw-bold mb-3">Welcome to Avighna2 SIEM - ELK Edition</h2>
+                    <p class="lead text-muted mb-4">Elasticsearch-Powered Security Information and Event Management</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Login to Continue
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- ELK Status Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="card-title mb-2">
+                                <i class="fas fa-search-plus me-2"></i>
+                                ELK-Powered SIEM Dashboard
+                            </h1>
+                            <p class="text-muted mb-0">Real-time security monitoring with Elasticsearch analytics</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="elk-status">
+                                {% if elk_status.available %}
+                                    <span class="badge bg-success fs-6">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Elasticsearch: {{ elk_status.status|title }}
+                                    </span>
+                                    <small class="d-block text-muted">
+                                        {{ elk_status.documents|default(0) }} documents • {{ elk_status.nodes|default(1) }} nodes
+                                    </small>
+                                {% else %}
+                                    <span class="badge bg-danger fs-6">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Elasticsearch Offline
+                                    </span>
+                                    <small class="d-block text-muted">
+                                        Fallback mode active
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Threat Monitor -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Real-time Threat Monitor
+                        <span class="badge bg-dark ms-2" id="threatCount">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="realTimeThreatsList" class="threat-monitor">
+                        <p class="text-muted">Monitoring for high-priority threats...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ELK Analytics Dashboard -->
+    <div class="row mb-4">
+        <!-- Top Threat IPs Card -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-crosshairs me-2"></i>
+                        Top Threat IPs
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="topThreatIPs">
+                        {% if analytics.top_threat_ips %}
+                            {% for threat in analytics.top_threat_ips[:5] %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <strong>{{ threat.ip }}</strong>
+                                    <small class="d-block text-muted">
+                                        {% for level in threat.threat_levels %}
+                                            <span class="badge badge-sm bg-warning">{{ level }}</span>
+                                        {% endfor %}
+                                    </small>
+                                </div>
+                                <span class="badge bg-dark">{{ threat.count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No threat data available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Geographic Distribution -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-globe me-2"></i>
+                        Geographic Threats
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="geographicThreats">
+                        {% if analytics.geographic_distribution %}
+                            {% for geo in analytics.geographic_distribution[:8] %}
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>{{ geo.country }}</span>
+                                <span class="badge bg-info">{{ geo.count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No geographic data available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attack Methods -->
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-sword me-2"></i>
+                        Attack Methods
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div id="attackMethods">
+                        {% if analytics.attack_methods %}
+                            {% for method in analytics.attack_methods %}
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-uppercase">{{ method.method }}</span>
+                                <span class="badge bg-warning text-dark">{{ method.count }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No attack method data available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIEM Features -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-upload feature-icon text-primary"></i>
+                    <h5 class="card-title">ELK Log Ingestion</h5>
+                    <p class="card-text">Upload logs and store in Elasticsearch</p>
+                    <button class="btn btn-primary" onclick="showIngestModal()">
+                        <i class="fas fa-cloud-upload-alt me-2"></i>Ingest to ELK
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-search feature-icon text-success"></i>
+                    <h5 class="card-title">ELK Search</h5>
+                    <p class="card-text">Advanced Elasticsearch queries</p>
+                    <button class="btn btn-success" onclick="showELKSearchModal()">
+                        <i class="fas fa-search me-2"></i>Search ELK
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain feature-icon text-info"></i>
+                    <h5 class="card-title">AI-Enhanced NLP</h5>
+                    <p class="card-text">Natural language queries with ELK</p>
+                    <div class="input-group mt-2">
+                        <input type="text" class="form-control" id="nlpQuery" placeholder="Ask about threats...">
+                        <button class="btn btn-info" onclick="processNLPQuery()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line feature-icon text-warning"></i>
+                    <h5 class="card-title">Threat Analytics</h5>
+                    <p class="card-text">Real-time ELK analytics</p>
+                    <button class="btn btn-warning" onclick="refreshAnalytics()">
+                        <i class="fas fa-sync me-2"></i>Refresh Analytics
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Charts -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-area me-2"></i>
+                        Threat Timeline
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="threatTimelineChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pie-chart me-2"></i>
+                        Status Code Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusDistributionChart" width="300" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Area -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        ELK Analysis Results
+                    </h5>
+                </div>
+                <div class="card-body" id="resultsPanel">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-search fa-3x mb-3"></i>
+                        <p>ELK analysis results will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+<!-- ELK Search Modal -->
+<div class="modal fade" id="elkSearchModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-search me-2"></i>
+                    Advanced ELK Search
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="elkQuery" class="form-label">Search Query</label>
+                    <input type="text" class="form-control" id="elkQuery" placeholder="Enter search terms...">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="threatLevel" class="form-label">Threat Level</label>
+                        <select class="form-select" id="threatLevel">
+                            <option value="">All levels</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="timeRange" class="form-label">Time Range</label>
+                        <select class="form-select" id="timeRange">
+                            <option value="">All time</option>
+                            <option value="1h">Last hour</option>
+                            <option value="24h">Last 24 hours</option>
+                            <option value="7d">Last 7 days</option>
+                            <option value="30d">Last 30 days</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="performELKSearch()">
+                    <i class="fas fa-search me-2"></i>Search ELK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Initialize Socket.IO for real-time updates
+const socket = io();
+
+// Real-time threat monitoring
+socket.on('threat_update', function(data) {
+    updateThreatMonitor(data.threats);
+    document.getElementById('threatCount').textContent = data.count;
+});
+
+// Connect to threat monitoring
+socket.emit('monitor_threats');
+
+function updateThreatMonitor(threats) {
+    const container = document.getElementById('realTimeThreatsList');
+    
+    if (threats.length === 0) {
+        container.innerHTML = '<p class="text-success">No high-priority threats detected</p>';
+        return;
+    }
+    
+    let html = '';
+    threats.slice(0, 5).forEach(threat => {
+        const timestamp = new Date(threat.timestamp).toLocaleString();
+        const threatClass = threat.threat_level === 'critical' ? 'danger' : 'warning';
+        
+        html += `
+            <div class="alert alert-${threatClass} alert-sm mb-2">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>${threat.ip || 'Unknown IP'}</strong>
+                        <small class="d-block">${threat.event_type || 'Security Event'}</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-${threatClass}">${threat.threat_level}</span>
+                        <small class="d-block">${timestamp}</small>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// ELK Search functionality
+function showELKSearchModal() {
+    $('#elkSearchModal').modal('show');
+}
+
+function performELKSearch() {
+    const query = document.getElementById('elkQuery').value;
+    const threatLevel = document.getElementById('threatLevel').value;
+    const timeRange = document.getElementById('timeRange').value;
+    
+    showLoading('Searching Elasticsearch...');
+    
+    const filters = {};
+    if (threatLevel) filters.threat_level = threatLevel;
+    if (timeRange) {
+        // Convert time range to actual dates
+        const now = new Date();
+        let startTime;
+        switch(timeRange) {
+            case '1h': startTime = new Date(now - 60*60*1000); break;
+            case '24h': startTime = new Date(now - 24*60*60*1000); break;
+            case '7d': startTime = new Date(now - 7*24*60*60*1000); break;
+            case '30d': startTime = new Date(now - 30*24*60*60*1000); break;
+        }
+        if (startTime) {
+            filters.time_range = [startTime.toISOString(), now.toISOString()];
+        }
+    }
+    
+    $.ajax({
+        url: '/api/elk/search',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            query: query,
+            filters: filters,
+            size: 50
+        }),
+        success: function(response) {
+            hideLoading();
+            $('#elkSearchModal').modal('hide');
+            showELKResults(response.results);
+        },
+        error: function(xhr) {
+            hideLoading();
+            showAlert('ELK search failed: ' + (xhr.responseJSON?.error || 'Unknown error'), 'danger');
+        }
+    });
+}
+
+function showELKResults(results) {
+    const panel = document.getElementById('resultsPanel');
+    
+    if (!results || results.length === 0) {
+        panel.innerHTML = '<div class="text-center text-muted"><p>No results found</p></div>';
+        return;
+    }
+    
+    let html = `<h6>Found ${results.length} events:</h6><div class="table-responsive"><table class="table table-striped">`;
+    html += '<thead><tr><th>Timestamp</th><th>IP</th><th>Event Type</th><th>Threat Level</th><th>Details</th></tr></thead><tbody>';
+    
+    results.slice(0, 20).forEach(event => {
+        const timestamp = new Date(event.timestamp).toLocaleString();
+        const threatClass = event.threat_level === 'critical' ? 'danger' : 
+                           event.threat_level === 'high' ? 'warning' : 'info';
+        
+        html += `
+            <tr>
+                <td><small>${timestamp}</small></td>
+                <td><code>${event.ip || 'N/A'}</code></td>
+                <td><span class="badge bg-secondary">${event.event_type || 'Unknown'}</span></td>
+                <td><span class="badge bg-${threatClass}">${event.threat_level || 'info'}</span></td>
+                <td><small>${event.raw_log || event.url || 'No details'}</small></td>
+            </tr>
+        `;
+    });
+    
+    html += '</tbody></table></div>';
+    panel.innerHTML = html;
+    
+    // Auto-scroll to results
+    panel.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Refresh analytics
+function refreshAnalytics() {
+    showLoading('Refreshing ELK analytics...');
+    
+    $.ajax({
+        url: '/api/elk/analytics',
+        type: 'GET',
+        success: function(response) {
+            hideLoading();
+            if (response.success) {
+                location.reload(); // Simple refresh for now
+            }
+        },
+        error: function(xhr) {
+            hideLoading();
+            showAlert('Failed to refresh analytics', 'danger');
+        }
+    });
+}
+
+// Initialize charts if data is available
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize threat timeline chart
+    {% if analytics.threat_timeline %}
+    const timelineCtx = document.getElementById('threatTimelineChart').getContext('2d');
+    new Chart(timelineCtx, {
+        type: 'line',
+        data: {
+            labels: {{ analytics.threat_timeline | map(attribute='key_as_string') | list | tojson }},
+            datasets: [{
+                label: 'Threats',
+                data: {{ analytics.threat_timeline | map(attribute='threat_count.doc_count') | list | tojson }},
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    {% endif %}
+    
+    // Initialize status distribution chart
+    {% if analytics.status_distribution %}
+    const statusCtx = document.getElementById('statusDistributionChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ analytics.status_distribution | map(attribute='code') | list | tojson }},
+            datasets: [{
+                data: {{ analytics.status_distribution | map(attribute='count') | list | tojson }},
+                backgroundColor: [
+                    '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#20c997'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    {% endif %}
+});
+</script>
+{% endblock %}
